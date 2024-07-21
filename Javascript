@@ -1,0 +1,73 @@
+// Smooth scrolling for anchor links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        document.querySelector(this.getAttribute('href')).scrollIntoView({
+            behavior: 'smooth'
+        });
+    });
+});
+
+// Adding scroll animations to elements
+const scrollElements = document.querySelectorAll('.scroll-element');
+
+const elementInView = (el, dividend = 1) => {
+    const elementTop = el.getBoundingClientRect().top;
+    return (
+        elementTop <= (window.innerHeight || document.documentElement.clientHeight) / dividend
+    );
+};
+
+const displayScrollElement = (element) => {
+    element.classList.add('scrolled');
+};
+
+const handleScrollAnimation = () => {
+    scrollElements.forEach((el) => {
+        if (elementInView(el, 1.25)) {
+            displayScrollElement(el);
+        }
+    });
+};
+
+window.addEventListener('scroll', () => {
+    handleScrollAnimation();
+});
+
+// Sticky navigation bar on scroll
+window.addEventListener('scroll', () => {
+    const header = document.querySelector('header');
+    header.classList.toggle('sticky', window.scrollY > 0);
+});
+
+// Back to top button
+const backToTopButton = document.createElement('button');
+backToTopButton.innerText = '↑';
+backToTopButton.classList.add('back-to-top');
+document.body.appendChild(backToTopButton);
+
+backToTopButton.addEventListener('click', () => {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+});
+
+window.addEventListener('scroll', () => {
+    if (window.scrollY > 300) {
+        backToTopButton.style.display = 'block';
+    } else {
+        backToTopButton.style.display = 'none';
+    }
+});
+
+// Navbar burger menu for mobile view
+const burgerMenu = document.createElement('div');
+burgerMenu.classList.add('burger-menu');
+burgerMenu.innerHTML = '<div></div><div></div><div></div>';
+document.querySelector('header .container').appendChild(burgerMenu);
+
+burgerMenu.addEventListener('click', () => {
+    document.querySelector('nav ul').classList.toggle('show');
+    burgerMenu.classList.toggle('toggle');
+});
